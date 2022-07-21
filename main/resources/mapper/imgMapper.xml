@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ <mapper namespace="com.company.mapper.imgMapper">
+ 	<insert id="insert" parameterType="com.company.first.imgVO">
+ 		insert into img(img,title,content) 
+ 		values(#{img}, #{title}, #{content})
+ 	</insert>
+ 	
+ 	
+ 	<select id="selectAll" resultType="com.company.first.imgVO">
+		SELECT *
+		FROM img
+		
+	</select>
+	
+ 	<select id="select" resultType="com.company.first.imgVO">
+		SELECT *
+		FROM img
+		where seq=#{a};
+	</select>
+ </mapper>
