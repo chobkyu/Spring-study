@@ -30,16 +30,39 @@
 				</ul>
 			</nav>
 			
-			<article id = "content">
+			
+		</header>
+		
+		<article id = "content">
 				<h1>Spring_Web</h1>
-				<c:forEach items="${list}" var = "memberVO">
+				<table>
+					<thead>
+						<tr>
+							<th>Study</th>
+							<th>ID</th>
+							<th>DATE</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>여기는 공부한 내용</td>
+							<td>공부한 사람</td>
+							<td>공부한 시간</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				
+				
+		</article>
+		
+		<footer id="foot">
+			<c:forEach items="${list}" var = "memberVO">
 					<p><c:out value="${memberVO.name} "></c:out></p>
 					<p><c:out value="${memberVO.age} "></c:out></p>
 				</c:forEach>
 				<br>
-				<button onclick = "location.href='/img'">image</button>
-			</article>
-		</header>
+		</footer>
 	</div>
 
 	

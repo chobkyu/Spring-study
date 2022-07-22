@@ -44,6 +44,7 @@ import com.company.*;
 import com.company.DAO.MultiImgDAO;
 import com.company.DAO.imgDAO;
 import com.company.DAO.memberDAO;
+import com.company.DAO.studyDAO;
 /**
  * Handles requests for the application home page.
  */
@@ -62,6 +63,9 @@ public class HomeController {
 	private imgDAO iDao;
 	@Inject
 	private MultiImgDAO mtDao;
+	@Inject
+	private studyDAO sDao;
+	
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
@@ -70,13 +74,15 @@ public class HomeController {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
 		memberVO mVo = new memberVO();
-		
 		List<memberVO> mlist = new ArrayList<memberVO>();
-		
 		mlist = mDao.selectAll();
 		
-		model.addAttribute("list",mlist);
+		studyVO sVo = new studyVO();
+		List<studyVO> slist = new ArrayList<studyVO>();
+		slist = sDao.selectAll();
 		
+		model.addAttribute("list",mlist);
+		model.addAttribute("slist",slist);
 		
 		return "home";
 	}
@@ -216,5 +222,11 @@ public class HomeController {
 	
 	
 	}
+	
+	@RequestMapping(value = "/map", method = RequestMethod.GET)
+	public String Map(Locale locale, Model model) {
+		return "map";
+	}
+	
 	
 }
