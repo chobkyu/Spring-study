@@ -69,11 +69,6 @@ public class HomeController {
 	public String home(Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		
-		String formattedDate = dateFormat.format(date);
-		
 		memberVO mVo = new memberVO();
 		
 		List<memberVO> mlist = new ArrayList<memberVO>();
@@ -81,13 +76,13 @@ public class HomeController {
 		mlist = mDao.selectAll();
 		
 		model.addAttribute("list",mlist);
-		model.addAttribute("serverTime", formattedDate );
+		
 		
 		return "home";
 	}
 	
 	@RequestMapping(value = "/img", method = RequestMethod.GET)
-	public String img(Locale locale, Model model) {
+	public String img() {
 		
 		return "img";
 	}
@@ -100,9 +95,9 @@ public class HomeController {
 	@RequestMapping(value="/saveImage", method=RequestMethod.POST)
 	public String saveImage(HttpServletRequest request, String title, String content){
 		MultipartHttpServletRequest mhsr=(MultipartHttpServletRequest) request;
-
-		System.out.println(title+"  "+content);
+		imgVO vo = new imgVO();
 		byte[] file= "0".getBytes();
+		
 		try {
 			file = mhsr.getFile("imgFile").getBytes();
 			if(file.length==0) {
@@ -113,7 +108,7 @@ public class HomeController {
 			// TODO Auto-generated catch block
 			System.out.println(e1.getMessage());
 		}
-		/* ���� ���ÿ� �����ϱ�
+		/* 로컬에 파일로 저장
 		try {
 		    OutputStream output = new FileOutputStream("C:\\Users\\NCL-NT-0163\\Desktop\\Output.png");
 		    byte[] by = file;
@@ -123,7 +118,7 @@ public class HomeController {
 	            e.getStackTrace();
 		}*/
 		try {
-			imgVO vo = new imgVO();
+			
 			vo.setContent(content);
 			vo.setTitle(title);
 			vo.setImg(file);
@@ -147,12 +142,13 @@ public class HomeController {
 	
 	@RequestMapping(value="/getByteImage", method = RequestMethod.GET)
 	public ResponseEntity<byte[]> getByteImage(HttpServletRequest request) {//ResponseEntity�� HttpEntity�� ��ӹ������ν� HttpHeader�� body�� ���� �� ����
+		imgVO vo = new imgVO();
 		String a = request.getParameter("number");
 		int temp = Integer.parseInt(a) ;
 		
 		//List<imgVO> list = 
 		//System.out.println(list.size());
-		imgVO vo = new imgVO();
+		
 		vo =iDao.getByteImage(temp);
 	    byte[] imageContent = vo.img;
 	    final HttpHeaders headers = new HttpHeaders();
@@ -161,7 +157,7 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value="/view", method = RequestMethod.GET)
-	public String view(HttpServletRequest request, Model model) {
+	public String view(HttpServletRequest request) {
 		/*
 		List<imgVO> list = iDao.getByteImage();
 		System.out.println(list.size());
@@ -176,7 +172,7 @@ public class HomeController {
 		
 		String imgUrl = "/getByteImage?number="+num;
 		
-		model.addAttribute("board",vo);
+		request.setAttribute("board",vo);
 		request.setAttribute("imgSrc", imgUrl);
 		return "imgView";
 	}
@@ -188,7 +184,7 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value="/multi-file", method = RequestMethod.POST)
-	public String multiImg(@RequestParam("multiFile") List<MultipartFile> multiFileList, HttpServletRequest request, Model model) {
+	public String multiImg(@RequestParam("multiFile") List<MultipartFile> multiFileList) {
 		//MultipartFile mhsr=(MultipartFile) request;
 		List<byte[]> list = new ArrayList<byte[]>();
 		byte[] file= "0".getBytes();
@@ -204,6 +200,7 @@ public class HomeController {
 			}
 			list.add(file);
 		}
+		
 		System.out.println(list.size());
 		
 		System.out.println(list.get(0).length);

@@ -12,6 +12,7 @@ import com.company.first.imgVO;
 
 @Repository
 public class imgDAOImp implements imgDAO{
+	
 	@Inject
 	private SqlSession sqlSession;
 	
