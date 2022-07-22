@@ -9,17 +9,18 @@
 </head>
 <style>
 	#map{
-		width : 100%;
+		width : 400px;
 		height : 400px;
-		background-color : grey; 
 	}
 </style>
 
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b2433be4a31662fe810753bc8a79d5c">
-</script>
 
 <body>
+
 	<h3>글쓴이 위치</h3>
+	<div id="map">
+	
+	</div>
 	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b2433be4a31662fe810753bc8a79d5c">
 </script>
 <script>
@@ -30,9 +31,7 @@
 	};
 	var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 </script>
-	<div id="map">
 	
-	</div>
 
 </body>
 </html>
