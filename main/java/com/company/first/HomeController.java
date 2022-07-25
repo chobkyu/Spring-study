@@ -30,6 +30,9 @@ import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
@@ -47,6 +50,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.company.*;
 import com.company.DAO.MultiImgDAO;
@@ -232,12 +240,7 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/map", method = RequestMethod.GET)
-	public String Map(Locale locale, Model model) {
-		return "map";
-	}
-	
-	@RequestMapping(value = "/ApiTest", method = RequestMethod.GET)
-	public String ApiTest(Locale locale, Model model) throws IOException {
+	public String Map(Locale locale, Model model) throws IOException, ParserConfigurationException, SAXException{
 		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/3160000/guroPm25DvcInfoSvc/getGuroComSvCtPm25Dvc"); /*URL*/
         urlBuilder.append("?serviceKey=oR3vMDMK0NkbPa3T72RkCwTELh9R1cOXts2rpMELU4sMNcURyBxNvHgrTgKjNk3farBcSmtVUM8kJ1zvNgJVEQ%3D%3D&numOfRows=10&pageNo=1&returnType=xml"); /*Service Key*/
        
@@ -267,9 +270,92 @@ public class HomeController {
         String s = sb.toString();
         System.out.println(sb.toString());
         
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.parse(urlString);
         
-		return "ApiTest";
+        // root tag 
+        doc.getDocumentElement().normalize();
+        System.out.println("Root element: " + doc.getDocumentElement().getNodeName());
+        // Root element: response
+		
+        // 파싱할 tag
+        NodeList nList = doc.getElementsByTagName("item");
+        System.out.println("파싱할 리스트 수 : "+ nList.getLength());  // 파싱할 리스트 수 
+        
+        for(int i =0; i<nList.getLength();i++) {
+        	Node nNode = nList.item(i);
+        	if(nNode.getNodeType() == Node.ELEMENT_NODE){
+        		Element eElement = (Element) nNode;
+        		System.out.println(getTagValue("lon",eElement));
+        	}
+        }
+		return "map";
+		
 	}
+	
+	@RequestMapping(value = "/ApiTest", method = RequestMethod.GET)
+	public String ApiTest(Locale locale, Model model) throws IOException, ParserConfigurationException, SAXException {
+		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/3160000/guroPm25DvcInfoSvc/getGuroComSvCtPm25Dvc"); /*URL*/
+        urlBuilder.append("?serviceKey=oR3vMDMK0NkbPa3T72RkCwTELh9R1cOXts2rpMELU4sMNcURyBxNvHgrTgKjNk3farBcSmtVUM8kJ1zvNgJVEQ%3D%3D&numOfRows=10&pageNo=1&returnType=xml"); /*Service Key*/
+       
+        
+        String urlString = urlBuilder.toString();
+        System.out.println(urlString);
+        urlString.replaceAll("\n", "");
+        urlString.replaceAll(" ", "");
+        URL url = new URL(urlString);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-type", "application/json");
+        System.out.println("Response code: " + conn.getResponseCode());
+        BufferedReader rd;
+        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        } else {
+            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+        }
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = rd.readLine()) != null) {
+            sb.append(line);
+        }
+        rd.close();
+        conn.disconnect();
+        String s = sb.toString();
+        System.out.println(sb.toString());
+        
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.parse(urlString);
+        
+        // root tag 
+        doc.getDocumentElement().normalize();
+        System.out.println("Root element: " + doc.getDocumentElement().getNodeName());
+        // Root element: response
+		
+        // 파싱할 tag
+        NodeList nList = doc.getElementsByTagName("item");
+        System.out.println("파싱할 리스트 수 : "+ nList.getLength());  // 파싱할 리스트 수 
+        
+        for(int i =0; i<nList.getLength();i++) {
+        	Node nNode = nList.item(i);
+        	if(nNode.getNodeType() == Node.ELEMENT_NODE){
+        		Element eElement = (Element) nNode;
+        		System.out.println(getTagValue("lon",eElement));
+        	}
+        }
+        return "ApiTest";
+	}
+	
+	
+	private static String getTagValue(String tag, Element eElement) {
+		    NodeList nlList = eElement.getElementsByTagName(tag).item(0).getChildNodes();
+		    Node nValue = (Node) nlList.item(0);
+		    if(nValue == null) 
+		        return null;
+		    return nValue.getNodeValue();
+		}
 	
 	
 }
