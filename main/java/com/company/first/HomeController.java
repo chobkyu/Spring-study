@@ -283,13 +283,18 @@ public class HomeController {
         NodeList nList = doc.getElementsByTagName("item");
         System.out.println("파싱할 리스트 수 : "+ nList.getLength());  // 파싱할 리스트 수 
         
-        for(int i =0; i<nList.getLength();i++) {
-        	Node nNode = nList.item(i);
-        	if(nNode.getNodeType() == Node.ELEMENT_NODE){
-        		Element eElement = (Element) nNode;
-        		System.out.println(getTagValue("lon",eElement));
-        	}
+        String lat="";
+        String lon="";
+        Node nNode = nList.item(0);
+        if(nNode.getNodeType() == Node.ELEMENT_NODE){
+        	Element eElement = (Element) nNode;
+        	lat = getTagValue("lat",eElement);
+        	lon = getTagValue("lon",eElement);
+        	System.out.println(lat+"  "+lon);
         }
+        
+        model.addAttribute("lat",lat);
+        model.addAttribute("lon",lon);
 		return "map";
 		
 	}

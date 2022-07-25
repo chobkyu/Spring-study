@@ -34,6 +34,16 @@
 		};
 		var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 		
+		//API에서 받아온 좌표
+		var markerPosition  = new kakao.maps.LatLng(${lat}, ${lon}); 
+		
+		var marker = new kakao.maps.Marker({
+		    position: markerPosition
+		});
+
+		// 마커가 지도 위에 표시되도록 설정합니다
+		marker.setMap(map);
+
 		
 		//폴리곤 구하기
 		var lat = 37.584466044995345;
