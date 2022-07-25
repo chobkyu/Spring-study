@@ -32,7 +32,10 @@
 		};
 		var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 		
-		
+		var lat = 37.584466044995345;
+		var lng = 126.96999459195231;
+		var polygonPath ;
+		var polygon;
 		var positions = [
 			
 		    {
@@ -50,8 +53,6 @@
 		];
 		
 		
-		
-
 		/*
 		// 마커를 클릭했을 때 마커 위에 표시할 인포윈도우를 생성합니다
 		var iwContent = '<div style="padding:5px;">Hello World!</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
@@ -90,22 +91,65 @@
 		        image : markerImage // 마커 이미지 
 		    });
 		}
+		
+		function polyPoly(polyLat,polyLng){
+			// 선을 구성하는 좌표 배열입니다. 이 좌표들을 이어서 선을 표시합니다
+			polygonPath = [
+			    new kakao.maps.LatLng(37.58689690165778, 126.97172872732155),
+			    new kakao.maps.LatLng(37.58470798201685, 126.97386936851382),
+			    new kakao.maps.LatLng(polyLat , polyLng ) ,
+			    new kakao.maps.LatLng(37.58689690165778, 126.97172872732155),
+			];
+
+			// 지도에 표시할 다각형을 생성합니다
+			polygon = new kakao.maps.Polygon({
+			    path:polygonPath, // 그려질 다각형의 좌표 배열입니다
+			    strokeWeight: 3, // 선의 두께입니다
+			    strokeColor: '#39DE2A', // 선의 색깔입니다
+			    strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+			    strokeStyle: 'longdash', // 선의 스타일입니다
+			    fillColor: '#A2FF99', // 채우기 색깔입니다
+			    fillOpacity: 0.7 // 채우기 불투명도 입니다
+			});
+
+			// 지도에 선을 표시합니다 
+			polygon.setMap(map); 
+		}
+		
+		polyPoly(lat,lng); //폴리곤 실행
+		
 		// 지도에 클릭 이벤트를 등록합니다
 		// 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
 		kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
 		    
+			polygon.setMap(null);
 		    // 클릭한 위도, 경도 정보를 가져옵니다 
 		    var latlng = mouseEvent.latLng; 
 		    
 		    // 마커 위치를 클릭한 위치로 옮깁니다
 		    marker.setPosition(latlng);
-		    console.log(marker);
+		    
 		    var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
 		    message += '경도는 ' + latlng.getLng() + ' 입니다';
 		    
+		    lat = latlng.getLat();
+		    lng = latlng.getLng();
+		    console.log(lat);
+		    console.log(lng);
+		 // 선을 구성하는 좌표 배열입니다. 이 좌표들을 이어서 선을 표시합니다
+		 	
+		 	 
+			polyPoly(lat,lng);
+			
+			
+		    console.log(polygonPath[2]);
 		    var resultDiv = document.getElementById('clickLatlng'); 
 		    resultDiv.innerHTML = message;
+		    
+		    
 		});
+		
+
 	</script>
 		
 
