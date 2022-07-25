@@ -1,6 +1,7 @@
 package com.company.first;
 
 import java.awt.image.BufferedImage;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -17,7 +19,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.io.BufferedReader;
+import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -226,6 +234,41 @@ public class HomeController {
 	@RequestMapping(value = "/map", method = RequestMethod.GET)
 	public String Map(Locale locale, Model model) {
 		return "map";
+	}
+	
+	@RequestMapping(value = "/ApiTest", method = RequestMethod.GET)
+	public String ApiTest(Locale locale, Model model) throws IOException {
+		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/3160000/guroPm25DvcInfoSvc/getGuroComSvCtPm25Dvc"); /*URL*/
+        urlBuilder.append("?serviceKey=oR3vMDMK0NkbPa3T72RkCwTELh9R1cOXts2rpMELU4sMNcURyBxNvHgrTgKjNk3farBcSmtVUM8kJ1zvNgJVEQ%3D%3D&numOfRows=10&pageNo=1&returnType=xml"); /*Service Key*/
+       
+        
+        String urlString = urlBuilder.toString();
+        System.out.println(urlString);
+        urlString.replaceAll("\n", "");
+        urlString.replaceAll(" ", "");
+        URL url = new URL(urlString);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-type", "application/json");
+        System.out.println("Response code: " + conn.getResponseCode());
+        BufferedReader rd;
+        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        } else {
+            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+        }
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = rd.readLine()) != null) {
+            sb.append(line);
+        }
+        rd.close();
+        conn.disconnect();
+        String s = sb.toString();
+        System.out.println(sb.toString());
+        
+        
+		return "ApiTest";
 	}
 	
 	
