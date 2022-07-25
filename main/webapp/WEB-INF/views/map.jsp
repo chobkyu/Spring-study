@@ -25,17 +25,31 @@
 <div id="clickLatlng"></div>
 	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0b2433be4a31662fe810753bc8a79d5c"></script>
 	<script>
+	
+		
 		var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
 		var options = { //지도를 생성할 때 필요한 기본 옵션
 			center: new kakao.maps.LatLng(37.584466044995345 , 126.96999459195231), //지도의 중심좌표.
-			level: 3 //지도의 레벨(확대, 축소 정도)W
+			level: 4 //지도의 레벨(확대, 축소 정도)W
 		};
 		var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 		
+		
+		//폴리곤 구하기
 		var lat = 37.584466044995345;
 		var lng = 126.96999459195231;
 		var polygonPath ;
 		var polygon;
+		
+		//거리 구하기
+		var drawingFlag = false; // 선이 그려지고 있는 상태를 가지고 있을 변수입니다
+		var moveLine; // 선이 그려지고 있을때 마우스 움직임에 따라 그려질 선 객체 입니다
+		var distanceOverlay; // 선의 거리정보를 표시할 커스텀오버레이 입니다
+		var dots = {}; // 선이 그려지고 있을때 클릭할 때마다 클릭 지점과 거리를 표시하는 커스텀 오버레이 배열입니다.
+		
+		var clickLine = new Array();
+		var distanceOverlay = new Array();
+		
 		var positions = [
 			
 		    {
@@ -53,6 +67,8 @@
 		];
 		
 		
+        
+        //console.log(clickLine.getLength().getLat());
 		/*
 		// 마커를 클릭했을 때 마커 위에 표시할 인포윈도우를 생성합니다
 		var iwContent = '<div style="padding:5px;">Hello World!</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
@@ -90,6 +106,18 @@
 		        title : positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
 		        image : markerImage // 마커 이미지 
 		    });
+			
+		    var iwContent = '<div style="padding:5px;">'+positions[i].title+'</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+		    iwPosition = positions[i].latlng; //인포윈도우 표시 위치입니다
+
+			// 인포윈도우를 생성합니다
+			var infowindow = new kakao.maps.InfoWindow({
+			    position : iwPosition, 
+			    content : iwContent 
+			});
+			  
+			// 마커 위에 인포윈도우를 표시합니다. 두번째 파라미터인 marker를 넣어주지 않으면 지도 위에 표시됩니다
+			infowindow.open(map, marker); 
 		}
 		
 		function polyPoly(polyLat,polyLng){
@@ -117,12 +145,18 @@
 		}
 		
 		polyPoly(lat,lng); //폴리곤 실행
-		
+		polyPolyline(lat, lng); //폴리 라인 실행
 		// 지도에 클릭 이벤트를 등록합니다
 		// 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
 		kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
-		    
+										
+			for (var i=0; i<clickLine.length; i++) {
+				clickLine[i].setMap(null);
+				distanceOverlay[i].setMap(null);  
+			}
+			//기존 폴리곤 제거
 			polygon.setMap(null);
+			
 		    // 클릭한 위도, 경도 정보를 가져옵니다 
 		    var latlng = mouseEvent.latLng; 
 		    
@@ -140,7 +174,7 @@
 		 	
 		 	 
 			polyPoly(lat,lng);
-			
+			polyPolyline(lat, lng);
 			
 		    console.log(polygonPath[2]);
 		    var resultDiv = document.getElementById('clickLatlng'); 
@@ -149,7 +183,40 @@
 		    
 		});
 		
+		function polyPolyline(lat, lng){
+			var linePath =  [
+	        	new kakao.maps.LatLng(37.58689690165778, 126.97172872732155),
+	        	new kakao.maps.LatLng(37.58470798201685, 126.97386936851382),
+	        	new kakao.maps.LatLng(lat , lng),
+	        	new kakao.maps.LatLng(37.58689690165778, 126.97172872732155)
+	        ];
+			
+	        
+	        
+	        for(i=0; i<linePath.length-1;i++){
+	        	clickLine[i] = new kakao.maps.Polyline({
+	                map: map, // 선을 표시할 지도입니다 
+	                path: [
+	                	linePath[i],
+	                	linePath[i+1]
+	                ], // 선을 구성하는 좌표 배열입니다 클릭한 위치를 넣어줍니다
+	                strokeWeight: 3, // 선의 두께입니다 
+	                strokeColor: '#db4040', // 선의 색깔입니다
+	                strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+	                strokeStyle: 'solid' // 선의 스타일입니다
+	            });
+	        	distanceOverlay[i] = new kakao.maps.CustomOverlay({
+	                content: '<div class="dotOverlay">거리 <span class="number">' + Math.floor(clickLine[i].getLength()) + '</span>m</div>',
+	                position: linePath[i],
+	                yAnchor: 1,
+	                zIndex: 2
+	            });
 
+	            // 지도에 표시합니다
+	            clickLine[i].setMap(map); //clickLine = 객체, clickLine[i] = ClickLine()
+	            distanceOverlay[i].setMap(map);
+	        }
+		}
 	</script>
 		
 
