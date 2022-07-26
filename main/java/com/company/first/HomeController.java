@@ -34,7 +34,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -369,9 +374,9 @@ public class HomeController {
 		    return nValue.getNodeValue();
 	}
 	
-	//공공데이터 연결 및 xml 파싱
+	//공공데이터 연결 및 json 파싱
 		@RequestMapping(value = "/Api", method = RequestMethod.GET)
-		public String Api(Locale locale, Model model) throws IOException, ParserConfigurationException, SAXException{
+		public String Api(Locale locale, Model model) throws IOException, ParserConfigurationException, SAXException, ParseException{
 			StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty"); /*URL*/
      
 			urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=oR3vMDMK0NkbPa3T72RkCwTELh9R1cOXts2rpMELU4sMNcURyBxNvHgrTgKjNk3farBcSmtVUM8kJ1zvNgJVEQ%3D%3D"); /*Service Key*/
@@ -400,8 +405,39 @@ public class HomeController {
 	        }
 	        rd.close();
 	        conn.disconnect();
-	        System.out.println(sb.toString());
-			return "ApiTest";
+	        
+	        
+	        String jsonApi = (sb.toString());
+	        System.out.println("jsonApi의 값 : "+jsonApi);
+	        
+	        
+	        JSONParser jsonParser = new JSONParser();
+	        JSONObject jsonObject = (JSONObject) jsonParser.parse(jsonApi);
+	        System.out.println(jsonObject);
+	        
+	        JSONObject response = (JSONObject) jsonObject.get("response");
+	        System.out.println(response);
+	        
+	        JSONObject body = (JSONObject) response.get("body");
+	        System.out.println(body);
+
+	        JSONArray bodyArray = (JSONArray) body.get("items");
+	        
+	        
+	        System.out.println(bodyArray.size());
+	        for(int i=0; i<bodyArray.size();i++) {
+	        	System.out.println("======== person : " + i + " ========");
+                JSONObject personObject = (JSONObject) bodyArray.get(i);
+                
+                System.out.println(personObject.get("so2Grade"));
+                System.out.println(personObject.get("coFlag"));
+                System.out.println(personObject.get("khaiValue"));
+                System.out.println(personObject.get("so2Value"));
+                System.out.println(personObject.get("coValue"));
+            
+
+	        }
+	        return "ApiTest";
 		}
 	
 	
