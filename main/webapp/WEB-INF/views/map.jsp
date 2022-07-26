@@ -56,10 +56,10 @@
 		var polygon;
 		
 		//거리 구하기
-		var drawingFlag = false; // 선이 그려지고 있는 상태를 가지고 있을 변수입니다
-		var moveLine; // 선이 그려지고 있을때 마우스 움직임에 따라 그려질 선 객체 입니다
-		var distanceOverlay; // 선의 거리정보를 표시할 커스텀오버레이 입니다
-		var dots = {}; // 선이 그려지고 있을때 클릭할 때마다 클릭 지점과 거리를 표시하는 커스텀 오버레이 배열입니다.
+		//var drawingFlag = false; // 선이 그려지고 있는 상태를 가지고 있을 변수입니다
+		//var moveLine; // 선이 그려지고 있을때 마우스 움직임에 따라 그려질 선 객체 입니다
+		//var distanceOverlay; // 선의 거리정보를 표시할 커스텀오버레이 입니다
+		//var dots = {}; // 선이 그려지고 있을때 클릭할 때마다 클릭 지점과 거리를 표시하는 커스텀 오버레이 배열입니다.
 		
 		var clickLine = new Array();
 		var distanceOverlay = new Array();
@@ -225,9 +225,12 @@
 	                strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
 	                strokeStyle: 'solid' // 선의 스타일입니다
 	            });
+	        	
+	        	var newLat = (linePath[i].getLat()+linePath[i+1].getLat())/2
+	        	var newLng = (linePath[i].getLng()+linePath[i+1].getLng())/2
 	        	distanceOverlay[i] = new kakao.maps.CustomOverlay({
 	                content: '<div class="dotOverlay">거리 <span class="number">' + Math.floor(clickLine[i].getLength()) + '</span>m</div>',
-	                position: linePath[i],
+	                position: new kakao.maps.LatLng(newLat, newLng),
 	                yAnchor: 1,
 	                zIndex: 2
 	            });
@@ -254,9 +257,13 @@
                 strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
                 strokeStyle: 'solid' // 선의 스타일입니다
 			});
+			
+			var newLat = (linePath[0].getLat()+linePath[1].getLat())/2;
+			var newLng = (linePath[0].getLng()+linePath[1].getLng())/2;
+			
 			Overlay = new kakao.maps.CustomOverlay({
                 content: '<div class="dotOverlay">거리 <span class="number">' + Math.floor(polyLine.getLength()) + '</span>m</div>',
-                position: linePath[0],
+                position: new kakao.maps.LatLng(newLat, newLng),
                 yAnchor: 1,
                 zIndex: 2
             });
