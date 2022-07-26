@@ -45,8 +45,10 @@
 
 		// 마커가 지도 위에 표시되도록 설정합니다
 		marker.setMap(map);
-
 		
+		//api에서 받아온 좌표 길이
+		var polyLine;
+		var Overlay;
 		//폴리곤 구하기
 		var lat = 37.584466044995345;
 		var lng = 126.96999459195231;
@@ -167,9 +169,14 @@
 				clickLine[i].setMap(null);
 				distanceOverlay[i].setMap(null);  
 			}
+			
+			
 			//기존 폴리곤 제거
 			polygon.setMap(null);
 			
+			//기존 거리 구하는거 제거
+			Overlay.setMap(null);
+			polyLine.setMap(null);
 		    // 클릭한 위도, 경도 정보를 가져옵니다 
 		    var latlng = mouseEvent.latLng; 
 		    
@@ -188,7 +195,7 @@
 		 	 
 			polyPoly(lat,lng);
 			polyPolyline(lat, lng);
-			
+			apiPoly(lat, lng);
 		    console.log(polygonPath[2]);
 		    var resultDiv = document.getElementById('clickLatlng'); 
 		    resultDiv.innerHTML = message;
@@ -236,7 +243,7 @@
 				new kakao.maps.LatLng(apiLat , apiLon),
 				new kakao.maps.LatLng(lat , lng),
 			];
-			var polyLine = new kakao.maps.Polyline({
+			polyLine = new kakao.maps.Polyline({
 				map: map, // 선을 표시할 지도입니다 
                 path: [
                 	linePath[0],
@@ -247,7 +254,7 @@
                 strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
                 strokeStyle: 'solid' // 선의 스타일입니다
 			});
-			distanceOverlay = new kakao.maps.CustomOverlay({
+			Overlay = new kakao.maps.CustomOverlay({
                 content: '<div class="dotOverlay">거리 <span class="number">' + Math.floor(polyLine.getLength()) + '</span>m</div>',
                 position: linePath[0],
                 yAnchor: 1,
@@ -255,7 +262,7 @@
             });
 			
 			polyLine.setMap(map);
-			distanceOverlay.setMap(map);
+			Overlay.setMap(map);
 		}
 	</script>
 		
