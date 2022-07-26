@@ -63,6 +63,7 @@
 		
 		var clickLine = new Array();
 		var distanceOverlay = new Array();
+		var infowindow = new Array();
 		
 		var positions = [
 			
@@ -82,27 +83,7 @@
 		
 		
         
-        //console.log(clickLine.getLength().getLat());
-		/*
-		// 마커를 클릭했을 때 마커 위에 표시할 인포윈도우를 생성합니다
-		var iwContent = '<div style="padding:5px;">Hello World!</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-		    iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
-
-		    
-		 // 인포윈도우를 생성합니다
-		var infowindow = new kakao.maps.InfoWindow({
-		    content : iwContent,
-		    removable : iwRemoveable
-		});
-		    
-		// 마커에 클릭이벤트를 등록합니다
-		kakao.maps.event.addListener(marker, 'click', function() {
-		      // 마커 위에 인포윈도우를 표시합니다
-		      infowindow.open(map, marker);  
-		});
-		*/
-		
-		var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; 
+        var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; 
 	    
 		
 		for (var i = 0; i < positions.length; i ++) {
@@ -125,13 +106,13 @@
 		    iwPosition = positions[i].latlng; //인포윈도우 표시 위치입니다
 
 			// 인포윈도우를 생성합니다
-			var infowindow = new kakao.maps.InfoWindow({
+			infowindow[i] = new kakao.maps.InfoWindow({
 			    position : iwPosition, 
 			    content : iwContent 
 			});
 			  
 			// 마커 위에 인포윈도우를 표시합니다. 두번째 파라미터인 marker를 넣어주지 않으면 지도 위에 표시됩니다
-			infowindow.open(map, marker); 
+			infowindow[i].open(map, marker); 
 		}
 		
 		function polyPoly(polyLat,polyLng){
@@ -169,8 +150,8 @@
 				clickLine[i].setMap(null);
 				distanceOverlay[i].setMap(null);  
 			}
-			
-			
+			//인포윈도우 제거
+			infowindow[2].close();
 			//기존 폴리곤 제거
 			polygon.setMap(null);
 			
@@ -183,6 +164,9 @@
 		    // 마커 위치를 클릭한 위치로 옮깁니다
 		    marker.setPosition(latlng);
 		    
+		    
+		    
+			
 		    var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
 		    message += '경도는 ' + latlng.getLng() + ' 입니다';
 		    
@@ -200,8 +184,20 @@
 		    var resultDiv = document.getElementById('clickLatlng'); 
 		    resultDiv.innerHTML = message;
 		    
-		    
+		    //마우스 찍은 위치 인포 윈도우
+		    var iwContent = '<div style="padding:5px;">'+lat+' ,'+lng+'</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+		    iwPosition = new kakao.maps.LatLng(lat, lng);; //인포윈도우 표시 위치입니다
+
+			// 인포윈도우를 생성합니다
+			infowindow[2] = new kakao.maps.InfoWindow({
+			    position : iwPosition, 
+			    content : iwContent 
+			});
+			  
+			// 마커 위에 인포윈도우를 표시합니다. 두번째 파라미터인 marker를 넣어주지 않으면 지도 위에 표시됩니다
+			infowindow[2].open(map, marker); 
 		});
+		
 		
 		function polyPolyline(lat, lng){
 			var linePath =  [
