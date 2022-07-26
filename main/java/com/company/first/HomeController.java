@@ -114,6 +114,8 @@ public class HomeController {
 	 * @param vo
 	 * @return
 	 */
+	
+	//이미지 저장하기
 	@RequestMapping(value="/saveImage", method=RequestMethod.POST)
 	public String saveImage(HttpServletRequest request, String title, String content){
 		MultipartHttpServletRequest mhsr=(MultipartHttpServletRequest) request;
@@ -162,6 +164,7 @@ public class HomeController {
 		return "image";
 	}
 	
+	//이미지 페이지(<img>)에서 불러오기
 	@RequestMapping(value="/getByteImage", method = RequestMethod.GET)
 	public ResponseEntity<byte[]> getByteImage(HttpServletRequest request) {//ResponseEntity�� HttpEntity�� ��ӹ������ν� HttpHeader�� body�� ���� �� ����
 		imgVO vo = new imgVO();
@@ -171,13 +174,14 @@ public class HomeController {
 		//List<imgVO> list = 
 		//System.out.println(list.size());
 		
-		vo =iDao.getByteImage(temp);
+		vo = iDao.getByteImage(temp);
 	    byte[] imageContent = vo.img;
 	    final HttpHeaders headers = new HttpHeaders();
 	    headers.setContentType(MediaType.IMAGE_PNG);  //�̵�� Ÿ���� ��Ÿ���� ���� ���(����� Ŭ���̾�Ʈ�� ������ ��û �Ǵ� �������� �ΰ����� ������ ������ �� �ְ� ����)
 	    return new ResponseEntity<byte[]>(imageContent, headers, HttpStatus.OK);
 	}
 	
+	//이미지 불러오기
 	@RequestMapping(value="/view", method = RequestMethod.GET)
 	public String view(HttpServletRequest request) {
 		/*
@@ -205,6 +209,7 @@ public class HomeController {
 	
 	}
 	
+	//다중 사진 업로드
 	@RequestMapping(value="/multi-file", method = RequestMethod.POST)
 	public String multiImg(@RequestParam("multiFile") List<MultipartFile> multiFileList) {
 		//MultipartFile mhsr=(MultipartFile) request;
@@ -239,6 +244,7 @@ public class HomeController {
 	
 	}
 	
+	//지도 띄우기 및 공공데이터 API 연동 밍 xml 파싱
 	@RequestMapping(value = "/map", method = RequestMethod.GET)
 	public String Map(Locale locale, Model model) throws IOException, ParserConfigurationException, SAXException{
 		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/3160000/guroPm25DvcInfoSvc/getGuroComSvCtPm25Dvc"); /*URL*/
@@ -299,6 +305,7 @@ public class HomeController {
 		
 	}
 	
+	//공공데이터 연결 및 xml 파싱
 	@RequestMapping(value = "/ApiTest", method = RequestMethod.GET)
 	public String ApiTest(Locale locale, Model model) throws IOException, ParserConfigurationException, SAXException {
 		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/3160000/guroPm25DvcInfoSvc/getGuroComSvCtPm25Dvc"); /*URL*/
@@ -360,6 +367,41 @@ public class HomeController {
 		    if(nValue == null) 
 		        return null;
 		    return nValue.getNodeValue();
+	}
+	
+	//공공데이터 연결 및 xml 파싱
+		@RequestMapping(value = "/Api", method = RequestMethod.GET)
+		public String Api(Locale locale, Model model) throws IOException, ParserConfigurationException, SAXException{
+			StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty"); /*URL*/
+     
+			urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=oR3vMDMK0NkbPa3T72RkCwTELh9R1cOXts2rpMELU4sMNcURyBxNvHgrTgKjNk3farBcSmtVUM8kJ1zvNgJVEQ%3D%3D"); /*Service Key*/
+			urlBuilder.append("&" + URLEncoder.encode("stationName","UTF-8")+ "="+ URLEncoder.encode("종로구", "UTF-8"));
+			urlBuilder.append("&" + URLEncoder.encode("returnType","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8")); /*xml 또는 json*/
+	        urlBuilder.append("&" + URLEncoder.encode("dataTerm","UTF-8") + "=" + URLEncoder.encode("daily", "UTF-8")); /*한 페이지 결과 수(조회 날짜로 검색 시 사용 안함)*/
+	        urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호(조회 날짜로 검색 시 사용 안함)*/
+	        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("100", "UTF-8")); /*통보시간 검색(조회 날짜 입력이 없을 경우 한달동안 예보통보 발령 날짜의 리스트 정보를 확인)*/
+	        //urlBuilder.append("&" + URLEncoder.encode("InformCode","UTF-8") + "=" + URLEncoder.encode("PM10", "UTF-8")); /*통보코드검색(PM10, PM25, O3)*/
+	        URL url = new URL(urlBuilder.toString());
+	        System.out.println(urlBuilder.toString());
+	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	        conn.setRequestMethod("GET");
+	        conn.setRequestProperty("Content-type", "application/json");
+	        System.out.println("Response code: " + conn.getResponseCode());
+	        BufferedReader rd;
+	        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+	            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	        } else {
+	            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+	        }
+	        StringBuilder sb = new StringBuilder();
+	        String line;
+	        while ((line = rd.readLine()) != null) {
+	            sb.append(line);
+	        }
+	        rd.close();
+	        conn.disconnect();
+	        System.out.println(sb.toString());
+			return "ApiTest";
 		}
 	
 	

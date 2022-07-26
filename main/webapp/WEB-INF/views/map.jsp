@@ -35,6 +35,8 @@
 		var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 		
 		//API에서 받아온 좌표
+		var apiLat = ${lat};
+		var apiLon = ${lon};
 		var markerPosition  = new kakao.maps.LatLng(${lat}, ${lon}); 
 		
 		var marker = new kakao.maps.Marker({
@@ -156,6 +158,7 @@
 		
 		polyPoly(lat,lng); //폴리곤 실행
 		polyPolyline(lat, lng); //폴리 라인 실행
+		apiPoly(lat, lng);
 		// 지도에 클릭 이벤트를 등록합니다
 		// 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
 		kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
@@ -226,6 +229,33 @@
 	            clickLine[i].setMap(map); //clickLine = 객체, clickLine[i] = ClickLine()
 	            distanceOverlay[i].setMap(map);
 	        }
+		}
+		
+		function apiPoly(lat, lng){
+			var linePath = [
+				new kakao.maps.LatLng(apiLat , apiLon),
+				new kakao.maps.LatLng(lat , lng),
+			];
+			var polyLine = new kakao.maps.Polyline({
+				map: map, // 선을 표시할 지도입니다 
+                path: [
+                	linePath[0],
+                	linePath[1]
+                ], // 선을 구성하는 좌표 배열입니다 클릭한 위치를 넣어줍니다
+                strokeWeight: 3, // 선의 두께입니다 
+                strokeColor: '#db4040', // 선의 색깔입니다
+                strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
+                strokeStyle: 'solid' // 선의 스타일입니다
+			});
+			distanceOverlay = new kakao.maps.CustomOverlay({
+                content: '<div class="dotOverlay">거리 <span class="number">' + Math.floor(polyLine.getLength()) + '</span>m</div>',
+                position: linePath[0],
+                yAnchor: 1,
+                zIndex: 2
+            });
+			
+			polyLine.setMap(map);
+			distanceOverlay.setMap(map);
 		}
 	</script>
 		
