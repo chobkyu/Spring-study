@@ -45,9 +45,24 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td>여기는 공부한 내용</td>
-							<td>공부한 사람</td>
-							<td>공부한 시간</td>
+							<td onclick="location.href='/img'">이미지 업로드</td>
+							<td>조병규</td>
+							<td>07-24</td>
+						</tr>
+						<tr>
+							<td onclick="location.href='/formFile'">이미지 리스트</td>
+							<td>조병규</td>
+							<td>07-24</td>
+						</tr>
+						<tr>
+							<td onclick="location.href='/multi'">다중파일 업로드</td>
+							<td>조병규</td>
+							<td>07-25</td>
+						</tr>
+						<tr>
+							<td onclick="location.href='/map'">카카오맵, 공공데이터 API 사용</td>
+							<td>조병규</td>
+							<td>07-26</td>
 						</tr>
 					</tbody>
 				</table>
