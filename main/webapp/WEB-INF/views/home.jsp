@@ -64,6 +64,11 @@
 							<td>조병규</td>
 							<td>07-26</td>
 						</tr>
+						<tr>
+							<td onclick="location.href='/logIn'">POST 사용해 로그인</td>
+							<td>조병규</td>
+							<td>07-29</td>
+						</tr>
 					</tbody>
 				</table>
 				
