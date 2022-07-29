@@ -438,6 +438,13 @@ public class HomeController {
 	        }
 	        return "ApiTest";
 		}
+		
+		@RequestMapping(value = "/logIn", method = {RequestMethod.GET,RequestMethod.POST})
+		public String logIn(Locale locale, Model model, String id, String pw) {
+			System.out.println(id);
+			System.out.println(pw);
+			return "login";
+		}
 	
 	
 }
