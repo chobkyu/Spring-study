@@ -177,9 +177,7 @@ public class HomeController {
 		String a = request.getParameter("number");
 		int temp = Integer.parseInt(a) ;
 		
-		//List<imgVO> list = 
-		//System.out.println(list.size());
-		
+			
 		vo = iDao.getByteImage(temp);
 	    byte[] imageContent = vo.img;
 	    final HttpHeaders headers = new HttpHeaders();
