@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.company.first.LoginVO;
 
 @Repository
-public class LoginDAIImp implements LoginDAO{
+public class LoginDAOImp implements LoginDAO{
 	@Inject
 	private SqlSession sqlSession;
 	
