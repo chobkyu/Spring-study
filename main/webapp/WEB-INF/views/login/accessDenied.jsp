@@ -33,6 +33,14 @@
 	</HEAD> 
 	<BODY onLoad="Timer();">
 		<div>권한이 없습니다</div>
+		<!-- 
+		<div>
+			<p>해당 권한이 있어야 합니다</p>
+			회사코드 : ${cpcode} <br>
+			사    번 : ${cpstf} <br>
+			이    름 : ${username} 
+
+		</div> -->
 		<div id="choonDiv"></div>
 		<script>countdown();</script>
 	</BODY> 
