@@ -6,22 +6,23 @@
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security-3.1.xsd">
     <http auto-config='true' use-expressions="true">
-    <intercept-url pattern="/resources/**"	access="permitAll"/>
-	<intercept-url pattern="/login/**"      access="permitAll" />
-	<intercept-url pattern="/favicon.ico" access="hasRole('ROLE_ANONYMOUS')" />
+	    <intercept-url pattern="/resources/**"	access="permitAll"/>
+		<intercept-url pattern="/login/**"      access="permitAll" />
+		<intercept-url pattern="/favicon.ico" access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/" access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/map" access="hasRole('ROLE_ADMIN')" />
+		
+		<form-login login-page="/login/loginPage.do"
+					login-processing-url="/login.do"
+					authentication-failure-url="/login/loginPage.do?err=true"
+		
+					default-target-url="/"
+					username-parameter="userid" 
+					password-parameter="userpw" />        	
 
-	<intercept-url pattern="/map" access="hasRole('ROLE_ADMIN')" />
-	<form-login login-page="/login/loginPage.do"
-				login-processing-url="/login.do"
-				authentication-failure-url="/login/loginPage.do?err=true"
-	
-				default-target-url="/"
-				username-parameter="userid" 
-				password-parameter="userpw" />        	
-
-	<session-management>
-		<concurrency-control max-sessions="1" expired-url="/" />
-	</session-management>
+		<session-management>
+			<concurrency-control max-sessions="1" expired-url="/" />
+		</session-management>
 
         <access-denied-handler error-page="/login/accessDenied.do" />
           
