@@ -9,7 +9,7 @@
 	    <intercept-url pattern="/resources/**"	access="permitAll"/>
 		<intercept-url pattern="/login/**"      access="permitAll" />
 		<intercept-url pattern="/favicon.ico" access="hasRole('ROLE_ANONYMOUS')" />
-		<intercept-url pattern="/" access="permitAll" />
+		<intercept-url pattern="/" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" />
 		<intercept-url pattern="/map" access="hasRole('ROLE_ADMIN')" />
 		
 		<form-login login-page="/login/loginPage.do"
