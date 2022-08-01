@@ -9,7 +9,7 @@
 	    <intercept-url pattern="/resources/**"	access="permitAll"/>
 		<intercept-url pattern="/login/**"      access="permitAll" />
 		<intercept-url pattern="/favicon.ico" access="hasRole('ROLE_ANONYMOUS')" />
-		<intercept-url pattern="/" access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/" access="permitAll" />
 		<intercept-url pattern="/map" access="hasRole('ROLE_ADMIN')" />
 		
 		<form-login login-page="/login/loginPage.do"
@@ -29,11 +29,23 @@
     </http>
     <authentication-manager>
         <authentication-provider>
-            <user-service>
+            <!-- <user-service>
                <user name="admin" password="1234" authorities="ROLE_USER, ROLE_ADMIN" />
                <user name="guest" password="1234" authorities="ROLE_USER" />
                <user name="guest2" password="a1234" authorities="ROLE_USER" />
-            </user-service>
+            </user-service> -->
+            <jdbc-user-service data-source-ref="dataSource"
+            	users-by-username-query="SELECT USERID as username, 
+            									PASSWORD,
+            									1 as enabled
+            							   FROM TEST_USER WHERE USERID=?"
+            	authorities-by-username-query="SELECT USERID as username,
+            										  CASE WHEN USERGRADE='01' THEN 'ROLE_ADMIN' 
+            										       ELSE 'ROLE_USER'
+            										       END authority
+            								     FROM TEST_USER WHERE USERID=?"            
+            />
+
         </authentication-provider>
     </authentication-manager>
 </beans:beans>

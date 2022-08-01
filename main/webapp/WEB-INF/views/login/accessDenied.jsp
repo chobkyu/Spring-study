@@ -7,14 +7,14 @@
 		<META http-equiv="content-type" content="text/html; charset=euc-kr"> 
 		<TITLE> 권한이 없습니다</TITLE> 
 		<SCRIPT LANGUAGE="JavaScript"> 
-		<!-- 
+		
 		function Timer() { 
 		setTimeout("locateKap()",10000); 
 		 } 
 		function locateKap(){
 		 location.replace("/");
 		}
-		 //--> 
+		 
 		</SCRIPT> 
 		<script language='javascript'>
 			  cnt = 10; // 카운트다운 시간 초단위로 표시

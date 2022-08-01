@@ -66,6 +66,7 @@ import com.company.DAO.MultiImgDAO;
 import com.company.DAO.imgDAO;
 import com.company.DAO.memberDAO;
 import com.company.DAO.studyDAO;
+import com.company.DAO.LoginDAO;
 /**
  * Handles requests for the application home page.
  */
@@ -86,6 +87,8 @@ public class HomeController {
 	private MultiImgDAO mtDao;
 	@Inject
 	private studyDAO sDao;
+	@Inject
+	private LoginDAO lDao;
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -445,6 +448,23 @@ public class HomeController {
 			System.out.println(pw);
 			return "login";
 		}
-	
-	
+	/*
+		@RequestMapping(value = "/login/accessDenied.do", method = RequestMethod.GET)
+		public String security(Locale locale, Model model) {
+			LoginVO loginVO = new LoginVO();
+			loginVO = lDao.getInfo();
+			
+			Date date = new Date();
+			DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+			
+			String formattedDate = dateFormat.format(date);
+			
+			model.addAttribute("serverTime", formattedDate );		
+			model.addAttribute("cpcode", loginVO.getCpcode());
+			model.addAttribute("cpstf", loginVO.getCptf());
+			model.addAttribute("username", loginVO.getUsername());		
+			 
+			return "/login/accessDenied.do";
+		}
+	*/
 }

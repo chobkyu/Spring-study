@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ <mapper namespace="com.company.mapper.login_sql">
+ 	<select id="getInfo" resultType="LoginVO" >
+	SELECT CPCODE
+         , CDSTF
+         , USERNAME
+    FROM TEST_USER
+    WHERE USERID='admin'
+</select>
+ </mapper>
