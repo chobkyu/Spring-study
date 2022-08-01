@@ -10,7 +10,7 @@
 	<intercept-url pattern="/login/**"      access="permitAll" />
 	<intercept-url pattern="/favicon.ico" access="hasRole('ROLE_ANONYMOUS')" />
 
-	<intercept-url pattern="/**" access="hasRole('ROLE_ADMIN')" />
+	<intercept-url pattern="/map" access="hasRole('ROLE_ADMIN')" />
 	<form-login login-page="/login/loginPage.do"
 				login-processing-url="/login.do"
 				authentication-failure-url="/login/loginPage.do?err=true"
