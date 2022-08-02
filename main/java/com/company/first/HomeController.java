@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -28,7 +29,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -95,7 +99,13 @@ public class HomeController {
 	 */
 	//디비에서 리스트 불러오기
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
+	public String home(HttpServletRequest request, Locale locale, Model model) {
+		
+		Enumeration<String> attributes = request.getSession().getAttributeNames();
+		while (attributes.hasMoreElements()) {
+		    String attribute = (String) attributes.nextElement();
+		    System.err.println(attribute+" : "+request.getSession().getAttribute(attribute));
+		}
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
 		memberVO mVo = new memberVO();
@@ -449,7 +459,7 @@ public class HomeController {
 			return "login";
 		}
 	/*
-		@RequestMapping(value = "/login/accessDenied.do", method = RequestMethod.GET)
+		@RequestMapping(value = "/login/accessDenied", method = RequestMethod.GET)
 		public String security(Locale locale, Model model) {
 			LoginVO loginVO = new LoginVO();
 			loginVO = lDao.getInfo();
@@ -459,12 +469,37 @@ public class HomeController {
 			
 			String formattedDate = dateFormat.format(date);
 			
+			System.out.println(loginVO.getCpcode());
 			model.addAttribute("serverTime", formattedDate );		
 			model.addAttribute("cpcode", loginVO.getCpcode());
 			model.addAttribute("cpstf", loginVO.getCptf());
 			model.addAttribute("username", loginVO.getUsername());		
 			 
-			return "/login/accessDenied.do";
-		}
-	*/
+			return "/login/accessDenied";
+		}*/
+		
+		/*
+		@RequestMapping(value = "/logOut", method = RequestMethod.GET)
+		public String logOut(HttpServletRequest request, Locale locale, Model model,HttpServletResponse response) {
+			
+			HttpSession session = request.getSession();
+			System.out.println((String)session.getAttribute("JSESSIONID"));
+			session.invalidate();
+			
+		
+			
+			Cookie kc = new Cookie("JSESSIONID",null);
+			kc.setMaxAge(0);
+			kc.setPath("/");
+			response.addCookie(kc);
+			
+			Cookie[] list = request.getCookies();
+			for(Cookie cookie:list) {
+				if(cookie.getName().equals("JSESSIONID")) {
+					logger.info(cookie.getValue());
+				}
+			}
+			return "/login/loginPage";
+		}*/
+		
 }

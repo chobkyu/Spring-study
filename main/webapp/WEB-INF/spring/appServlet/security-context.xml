@@ -25,6 +25,12 @@
 		</session-management>
 
         <access-denied-handler error-page="/login/accessDenied.do" />
+        
+            <logout logout-url="/logOut"
+                     logout-success-url="/login/loginPage.do"
+                     invalidate-session="true"
+                     delete-cookies="JSESSIONID"></logout>
+
           
     </http>
     <authentication-manager>
