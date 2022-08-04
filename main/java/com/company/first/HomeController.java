@@ -459,6 +459,8 @@ public class HomeController {
 			return "login";
 		}
 		
+		
+		//------------------페이징(int 부분을 메소드로 묶던지 클래스로 만들어서 객체화 시켜보세요)--------//
 		@RequestMapping(value = "/page", method = {RequestMethod.GET,RequestMethod.POST})
 		public String page(Locale locale, Model model, @RequestParam("num") int num)  {
 			
