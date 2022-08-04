@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class imgVO {
 	int seq;
+	
 	public int getSeq() {
 		return seq;
 	}
@@ -18,6 +19,7 @@ public class imgVO {
 	String title;
 	String content;
 	byte[] img;
+	
 	public byte[] getImg() {
 		return img;
 	}

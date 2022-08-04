@@ -458,6 +458,37 @@ public class HomeController {
 			System.out.println(pw);
 			return "login";
 		}
+		
+		@RequestMapping(value = "/page", method = {RequestMethod.GET,RequestMethod.POST})
+		public String page(Locale locale, Model model, @RequestParam("num") int num)  {
+			
+			List<studyVO> list = new ArrayList<studyVO>();
+			list = sDao.selectAll();
+			
+			//게시물 총개수
+			int count = list.size();
+			
+			//한 페이지에 출력할 게시물 갯수
+			int postNum = 5;
+			
+			//하단 페이징 번호([게시물 총 갯수 / 한 페이지에 출력할 개수]의 올림)
+			int pageNum = (int)Math.ceil((double)count/postNum);
+			
+			//출력할 게시물
+			int displayPost = (num-1)*postNum;
+			
+			try {
+				list = sDao.listPage(displayPost, postNum);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				System.out.println(e.getMessage());
+			}
+			model.addAttribute("list",list);
+			model.addAttribute("pageNum", pageNum);
+			return "page";
+		}
+		
+		
 	/*
 		@RequestMapping(value = "/login/accessDenied", method = RequestMethod.GET)
 		public String security(Locale locale, Model model) {

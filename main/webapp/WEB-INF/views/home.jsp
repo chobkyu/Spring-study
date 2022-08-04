@@ -72,7 +72,12 @@
 						<tr>
 							<td onclick="location.href='/logOut'">로그아웃</td>
 							<td>조병규</td>
-							<td>07-29</td>
+							<td>08-02</td>
+						</tr>
+						<tr>
+							<td onclick = "location.href='/page?num=1'">페이징</td>
+							<td>조병규</td>
+							<td>08-04</td>
 						</tr>
 					</tbody>
 				</table>

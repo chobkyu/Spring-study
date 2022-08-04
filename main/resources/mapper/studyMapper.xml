@@ -9,4 +9,10 @@
  		from study
  	</select>
  	
+ 	<select id="listPage" parameterType="hashMap" resultType="com.company.first.studyVO">
+ 		select *
+ 		from study
+ 		limit #{displayPost},#{postNum}
+ 	</select>
+ 	
  </mapper>

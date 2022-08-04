@@ -1,5 +1,6 @@
 package com.company.DAO;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -20,6 +21,16 @@ public class studyDAOImp implements studyDAO{
 	@Override
 	public List<studyVO> selectAll() {
 		return sqlSession.selectList(namespace+".selectAll");
+	}
+	
+	@Override
+	public List<studyVO> listPage(int displayPost, int postNum) throws Exception{
+		HashMap data = new HashMap();
+		
+		data.put("displayPost",displayPost);
+		data.put("postNum",postNum);
+		
+		return sqlSession.selectList(namespace+".listPage",data);
 	}
 	
 
