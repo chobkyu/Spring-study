@@ -15,6 +15,7 @@
 				<th>seq</th>
 				<th>study</th>
 				<th>id</th>
+				<th>date</th>
 				
 			</tr>
 		</thead>

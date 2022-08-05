@@ -5,13 +5,14 @@
            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security-3.1.xsd">
-    <http auto-config='true' use-expressions="true">
+    <http auto-config='true' use-expressions="true"> <!-- 스프링 시큐리티가 기본 로그인 페이지를 제공해준다. -->
 	    <intercept-url pattern="/resources/**"	access="permitAll"/>
 		<intercept-url pattern="/login/**"      access="permitAll" />
 		<intercept-url pattern="/favicon.ico" access="hasRole('ROLE_ANONYMOUS')" />
 		<intercept-url pattern="/" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" />
 		<intercept-url pattern="/map" access="hasRole('ROLE_ADMIN')" />
 		
+		<!-- 로그인 페이지를 커스텀할 수 있는 태그이다. -->
 		<form-login login-page="/login/loginPage.do"
 					login-processing-url="/login.do"
 					authentication-failure-url="/login/loginPage.do?err=true"
@@ -20,6 +21,7 @@
 					username-parameter="userid" 
 					password-parameter="userpw" />        	
 
+		<!-- 세션 수를 설정하여 중복 로그인을 방지. 중복 로그인 발생 시 expried-url로 이동 -->
 		<session-management>
 			<concurrency-control max-sessions="1" expired-url="/" />
 		</session-management>
@@ -33,13 +35,15 @@
 
           
     </http>
-    <authentication-manager>
+    <authentication-manager> <!-- 유저들의 권한을 설정한다. -->
         <authentication-provider>
             <!-- <user-service>
                <user name="admin" password="1234" authorities="ROLE_USER, ROLE_ADMIN" />
                <user name="guest" password="1234" authorities="ROLE_USER" />
                <user name="guest2" password="a1234" authorities="ROLE_USER" />
             </user-service> -->
+            
+            <!-- root-context.xml에서 설정한 bean id를 가져온다 -->
             <jdbc-user-service data-source-ref="dataSource"
             	users-by-username-query="SELECT USERID as username, 
             									PASSWORD,
@@ -51,7 +55,12 @@
             										       END authority
             								     FROM TEST_USER WHERE USERID=?"            
             />
-
+			<!-- user-by-username-query : 사용자 인증을 가져온다. username, password, enabled 컬럼은 필수이다.
+			 이는 스프링에서 지정된 컬럼명이며 만일 테이블 커럶과 다른 경우 별칭(AS)을 줘서 변경하도록 한다. 
+			 Enabled 필드 값이 0이면 비활성이고 1이면 활성을 의미한다.
+			 authorities-by-username-query : 권한 인증을 가져온다. 
+			 Authority 필드 값은 "ROLE_ADMIN" 이나 "ROLE_USER"가 오도록 한다.
+			 -->
         </authentication-provider>
     </authentication-manager>
 </beans:beans>
