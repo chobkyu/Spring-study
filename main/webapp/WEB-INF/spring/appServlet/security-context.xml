@@ -6,6 +6,7 @@
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security-3.1.xsd">
     <http auto-config='true' use-expressions="true"> <!-- 스프링 시큐리티가 기본 로그인 페이지를 제공해준다. -->
+    	<intercept-url pattern="/**" requires-channel="https" />  
 	    <intercept-url pattern="/resources/**"	access="permitAll"/>
 		<intercept-url pattern="/login/**"      access="permitAll" />
 		<intercept-url pattern="/favicon.ico" access="hasRole('ROLE_ANONYMOUS')" />
