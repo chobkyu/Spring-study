@@ -462,8 +462,22 @@ public class HomeController {
 		
 		//------------------페이징(int 부분을 메소드로 묶던지 클래스로 만들어서 객체화 시켜보세요)--------//
 		@RequestMapping(value = "/page", method = {RequestMethod.GET,RequestMethod.POST})
-		public String page(Locale locale, Model model, @RequestParam("num") int num)  {
-			
+		public String page(Locale locale, Model model, @RequestParam("num") int num,HttpServletRequest request)  {
+			String option = request.getParameter("option");
+			String key = request.getParameter("key");
+
+			if(option==null){
+
+			}
+			else if(option.equals("search")){
+
+			}
+			List<studyVO> list = new ArrayList<studyVO>();
+			list = sDao.selectAll();
+
+			Page paging = new Page();
+			paging.set(num, list.size());
+/*
 			List<studyVO> list = new ArrayList<studyVO>();
 			list = sDao.selectAll();
 			
@@ -497,25 +511,24 @@ public class HomeController {
 			
 			boolean prev = startPageNum == 1 ? false : true;
 			boolean next = endPageNum * pageNum_cnt >= count ? false : true;
-			
-			
+			*/
 			
 			try {
-				list = sDao.listPage(displayPost, postNum);
+				list = sDao.listPage(paging.displayPost, paging.postNum);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				System.out.println(e.getMessage());
 			}
 			model.addAttribute("list",list);
-			model.addAttribute("pageNum", pageNum);
+			model.addAttribute("pageNum", paging.pageNum);
 			
 			// 시작 및 끝 번호
-			model.addAttribute("startPageNum", startPageNum);
-			model.addAttribute("endPageNum", endPageNum);
+			model.addAttribute("startPageNum", paging.startPageNum);
+			model.addAttribute("endPageNum", paging.endPageNum);
 
 			// 이전 및 다음 
-			model.addAttribute("prev", prev);
-			model.addAttribute("next", next);
+			model.addAttribute("prev", paging.prev);
+			model.addAttribute("next", paging.next);
 			
 			// 현재 페이지
 			model.addAttribute("select", num);

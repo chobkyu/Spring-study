@@ -14,5 +14,12 @@
  		from study
  		limit #{displayPost},#{postNum}
  	</select>
+
+	<select id="search" resultType="com.company.first.studyVO">
+		select *
+		from study
+		where study=key
+	</select>
+
  	
  </mapper>

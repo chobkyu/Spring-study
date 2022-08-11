@@ -6,8 +6,16 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+<script>
+	function search(){
+		let key = document.getElementById("search").value
 
+		location.href ="/page?option=search&key="+key;
+	}
+</script>
 <body>
+	<input type="text" id="search"/>
+	<button onclick="search()" >검색</button>
 
 	<table>
 		<thead>

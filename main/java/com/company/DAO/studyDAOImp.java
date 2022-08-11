@@ -32,6 +32,11 @@ public class studyDAOImp implements studyDAO{
 		
 		return sqlSession.selectList(namespace+".listPage",data);
 	}
+
+	@Override
+	public List<studyVO> search(String key){
+		return sqlSession.selectList(namespace+".search",key);
+	}
 	
 
 }
