@@ -463,10 +463,9 @@ public class HomeController {
 		//------------------페이징(int 부분을 메소드로 묶던지 클래스로 만들어서 객체화 시켜보세요)--------//
 		@RequestMapping(value = "/page", method = {RequestMethod.GET,RequestMethod.POST})
 		public String page(Locale locale, Model model, @RequestParam("num") int num,HttpServletRequest request)  {
-			System.out.println("hi");
 			String option = request.getParameter("option");
-			System.out.println(option);
 			String key = request.getParameter("key");
+
 			List<studyVO> list = new ArrayList<studyVO>();
 			Page paging = new Page();
 
@@ -479,11 +478,11 @@ public class HomeController {
 				// TODO Auto-generated catch block
 				System.out.println(e.getMessage());
 			}
+
 			if(option==null){
 
 			}
 			else if(option.equals("search")){
-				System.out.println("hello");
 				list = sDao.search(key);
 				paging.set(num, list.size());
 
@@ -499,9 +498,6 @@ public class HomeController {
 				model.addAttribute("key",key);
 
 			}
-
-
-
 
 			model.addAttribute("list",list);
 			model.addAttribute("pageNum", paging.pageNum);
