@@ -463,62 +463,46 @@ public class HomeController {
 		//------------------페이징(int 부분을 메소드로 묶던지 클래스로 만들어서 객체화 시켜보세요)--------//
 		@RequestMapping(value = "/page", method = {RequestMethod.GET,RequestMethod.POST})
 		public String page(Locale locale, Model model, @RequestParam("num") int num,HttpServletRequest request)  {
+			System.out.println("hi");
 			String option = request.getParameter("option");
+			System.out.println(option);
 			String key = request.getParameter("key");
-
-			if(option==null){
-
-			}
-			else if(option.equals("search")){
-
-			}
 			List<studyVO> list = new ArrayList<studyVO>();
-			list = sDao.selectAll();
-
 			Page paging = new Page();
-			paging.set(num, list.size());
-/*
-			List<studyVO> list = new ArrayList<studyVO>();
+
 			list = sDao.selectAll();
-			
-			//게시물 총개수
-			int count = list.size();
-			
-			//한 페이지에 출력할 게시물 갯수
-			int postNum = 5;
-			
-			//하단 페이징 번호([게시물 총 갯수 / 한 페이지에 출력할 개수]의 올림)
-			int pageNum = (int)Math.ceil((double)count/postNum);
-			
-			//출력할 게시물
-			int displayPost = (num-1)*postNum;
-			
-			// 한번에 표시할 페이징 번호의 갯수
-			int pageNum_cnt = 5;
+			paging.set(num, list.size());
 
-			// 표시되는 페이지 번호 중 마지막 번호
-			int endPageNum = (int)(Math.ceil((double)num / (double)pageNum_cnt) * pageNum_cnt);
-
-			// 표시되는 페이지 번호 중 첫번째 번호
-			int startPageNum = endPageNum - (pageNum_cnt - 1);
-			
-			// 마지막 번호 재계산
-			int endPageNum_tmp = (int)(Math.ceil((double)count / (double)pageNum_cnt));
-			 
-			if(endPageNum > endPageNum_tmp) {
-			 endPageNum = endPageNum_tmp;
-			}
-			
-			boolean prev = startPageNum == 1 ? false : true;
-			boolean next = endPageNum * pageNum_cnt >= count ? false : true;
-			*/
-			
 			try {
 				list = sDao.listPage(paging.displayPost, paging.postNum);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				System.out.println(e.getMessage());
 			}
+			if(option==null){
+
+			}
+			else if(option.equals("search")){
+				System.out.println("hello");
+				list = sDao.search(key);
+				paging.set(num, list.size());
+
+				try {
+					list = sDao.searchPage(paging.displayPost, paging.postNum,key);  //이게 문제임
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println(e.getMessage());
+				}
+
+
+				model.addAttribute("option",option);
+				model.addAttribute("key",key);
+
+			}
+
+
+
+
 			model.addAttribute("list",list);
 			model.addAttribute("pageNum", paging.pageNum);
 			
@@ -533,6 +517,68 @@ public class HomeController {
 			// 현재 페이지
 			model.addAttribute("select", num);
 			return "page";
+
+
+
+
+
+			/*  예전 코드
+			List<studyVO> list = new ArrayList<studyVO>();
+			list = sDao.selectAll();
+
+			//게시물 총개수
+			int count = list.size();
+
+			//한 페이지에 출력할 게시물 갯수
+			int postNum = 5;
+
+			//하단 페이징 번호([게시물 총 갯수 / 한 페이지에 출력할 개수]의 올림)
+			int pageNum = (int)Math.ceil((double)count/postNum);
+
+			//출력할 게시물
+			int displayPost = (num-1)*postNum;
+
+			// 한번에 표시할 페이징 번호의 갯수
+			int pageNum_cnt = 5;
+
+			// 표시되는 페이지 번호 중 마지막 번호
+			int endPageNum = (int)(Math.ceil((double)num / (double)pageNum_cnt) * pageNum_cnt);
+
+			// 표시되는 페이지 번호 중 첫번째 번호
+			int startPageNum = endPageNum - (pageNum_cnt - 1);
+
+			// 마지막 번호 재계산
+			int endPageNum_tmp = (int)(Math.ceil((double)count / (double)pageNum_cnt));
+
+			if(endPageNum > endPageNum_tmp) {
+			 endPageNum = endPageNum_tmp;
+			}
+
+			boolean prev = startPageNum == 1 ? false : true;
+			boolean next = endPageNum * pageNum_cnt >= count ? false : true;
+
+			try {
+				list = sDao.listPage(paging.displayPost, paging.postNum);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				System.out.println(e.getMessage());
+			}
+			model.addAttribute("list",list);
+			model.addAttribute("pageNum", paging.pageNum);
+
+			// 시작 및 끝 번호
+			model.addAttribute("startPageNum", paging.startPageNum);
+			model.addAttribute("endPageNum", paging.endPageNum);
+
+			// 이전 및 다음
+			model.addAttribute("prev", paging.prev);
+			model.addAttribute("next", paging.next);
+
+			// 현재 페이지
+			model.addAttribute("select", num);
+			return "page";
+			*/
+
 		}
 		
 		

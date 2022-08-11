@@ -38,5 +38,13 @@ public class studyDAOImp implements studyDAO{
 		return sqlSession.selectList(namespace+".search",key);
 	}
 	
+	@Override
+	public List<studyVO> searchPage(int displayPost, int postNum,String key) throws Exception{
+		HashMap data = new HashMap();
+		data.put("displayPost",displayPost);
+		data.put("postNum",postNum);
+		data.put("key",key);
 
+		return sqlSession.selectList(namespace+".searchSelect",data);
+	}
 }

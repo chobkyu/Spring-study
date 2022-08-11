@@ -18,8 +18,11 @@
 	<select id="search" resultType="com.company.first.studyVO">
 		select *
 		from study
-		where study=key
+		where study like #{key}
 	</select>
 
+	<select id="searchSelect" parameterType="hashMap" resultType="com.company.first.studyVO">
+		select * from (select * from study where study like #{key}) t limit #{displayPost},#{postNum} ;
+	</select>
  	
  </mapper>

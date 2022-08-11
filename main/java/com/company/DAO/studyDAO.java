@@ -8,4 +8,5 @@ public interface studyDAO {
 	public List<studyVO> selectAll(); 
 	public List<studyVO> listPage(int displayPost, int postNum) throws Exception;
 	public List<studyVO> search(String key);
+	public List<studyVO> searchPage(int displayPost, int postNum,String key) throws Exception;
 }
