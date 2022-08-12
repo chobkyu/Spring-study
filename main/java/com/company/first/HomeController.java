@@ -465,7 +465,7 @@ public class HomeController {
 		public String page(Locale locale, Model model, @RequestParam("num") int num,HttpServletRequest request)  {
 			String option = request.getParameter("option");
 			String key = request.getParameter("key");
-
+			System.out.println(key);
 			List<studyVO> list = new ArrayList<studyVO>();
 			Page paging = new Page();
 
@@ -483,19 +483,25 @@ public class HomeController {
 
 			}
 			else if(option.equals("search")){
-				list = sDao.search(key);
-				paging.set(num, list.size());
+				if(key.length()==0){
 
-				try {
-					list = sDao.searchPage(paging.displayPost, paging.postNum,key);  //이게 문제임
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					System.out.println(e.getMessage());
+				}
+				else{
+					list = sDao.search(key);
+					paging.set(num, list.size());
+
+					try {
+						list = sDao.searchPage(paging.displayPost, paging.postNum,key);  //이게 문제임
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						System.out.println(e.getMessage());
+					}
+
+
+					model.addAttribute("option",option);
+					model.addAttribute("key",key);
 				}
 
-
-				model.addAttribute("option",option);
-				model.addAttribute("key",key);
 
 			}
 
