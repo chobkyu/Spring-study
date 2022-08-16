@@ -50,6 +50,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -107,7 +108,24 @@ public class HomeController {
 		    System.err.println(attribute+" : "+request.getSession().getAttribute(attribute));
 		}
 		logger.info("Welcome home! The client locale is {}.", locale);
-		
+/*
+		HttpSession session = request.getSession();
+		Object s = session.getAttribute("JSESSIONID");
+		System.out.println(s.getClass());*/
+
+		Cookie[] cookie = request.getCookies();
+
+		for (Cookie c : cookie) {
+			System.out.println(c.getName());
+			System.out.println(c.getValue());
+
+		}
+
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		System.out.println(principal);
+
+
 		memberVO mVo = new memberVO();
 		List<memberVO> mlist = new ArrayList<memberVO>();
 		mlist = mDao.selectAll();
