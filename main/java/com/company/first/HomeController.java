@@ -102,6 +102,9 @@ public class HomeController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(HttpServletRequest request, Locale locale, Model model) {
 		
+		Hwplib hi = new Hwplip();
+		
+		hi.test();
 		Enumeration<String> attributes = request.getSession().getAttributeNames();
 		while (attributes.hasMoreElements()) {
 		    String attribute = (String) attributes.nextElement();
